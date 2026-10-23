@@ -122,6 +122,36 @@ body {
   position: absolute;
   bottom: 0;
 }
+.filter-tab {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0.5rem 1.2rem;
+  gap: 10px;
+}
+.skilled-tag {
+  width: max-content;
+  padding: 0.4rem;
+  border-radius: 0.3rem;
+  background-color: hsl(180, 8%, 90%);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+.skilled-tag .remove-btn {
+  background-image: url("./images/icon-remove.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+  outline: none;
+  border: none;
+  width: 15px;
+  height: 15px;
+  background-color: var(--primary-green);
+}
 
 @media screen and (max-width: 768px) {
   .card {
