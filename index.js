@@ -1,4 +1,5 @@
 const mainContent = document.querySelector(".main"); //parent container
+const filterTab = document.querySelector(".filter-tab");
 async function loadData() {
   try {
     const res = await fetch("./data.json");
@@ -47,15 +48,46 @@ function renderJobList(data, parentElement) {
             </div>
             <!-- Categories -->
             <div class="categories">
-                <span data-role="${card.role}">${card.role}</span>
-                <span data-level="${card.level}">${card.level}</span>
-                ${card.languages.map((lang) => `<span data-language="${lang}">${lang}</span>`).join("")}
-                ${card.tools.map((tool) => `<span data-tool="${tool}">${tool}</span>`).join("")}
-                
+                ${[card.role, card.level, ...card.languages, ...card.tools].map((skill) => `<span data-skill=${skill}>${skill}</span>`).join("")}  
             </div>
         </div>`;
     })
     .join("");
 
   parentElement.insertAdjacentHTML("beforeend", listCardMarkup);
+}
+
+selectRole(mainContent);
+
+function selectRole(parentElement) {
+  let tagsArray = [];
+
+  parentElement.addEventListener("click", (e) => {
+    let span = e.target.tagName === "SPAN";
+    if (span) {
+      let clickedSkill = e.target.dataset.skill;
+
+      // if find duplicate tag don't show
+      let duplicateTag = tagsArray.some((tag) => tag === clickedSkill);
+
+      if (duplicateTag) return;
+      else tagsArray.push(clickedSkill); //else push
+
+      const tag = document.createElement("span"); //create a wrapper
+      const text = document.createElement("p"); //Text clickedSkill
+      const removeBtn = document.createElement("button");
+
+      tag.classList.add("skilled-tag");
+      removeBtn.classList.add("remove-btn");
+
+      text.innerText = clickedSkill;
+
+      // these will create a span tag with remove btn
+      tag.appendChild(text);
+      tag.appendChild(removeBtn);
+
+      //append to main container(filter-tab div)
+      filterTab.appendChild(tag);
+    }
+  });
 }
