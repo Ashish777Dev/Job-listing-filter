@@ -1,5 +1,6 @@
 const mainContent = document.querySelector(".main"); //parent container
 const filterTab = document.querySelector(".filter-tab");
+let activeFilter = [];
 async function loadData() {
   try {
     const res = await fetch("./data.json");
@@ -48,7 +49,7 @@ function renderJobList(data, parentElement) {
             </div>
             <!-- Categories -->
             <div class="categories">
-                ${[card.role, card.level, ...card.languages, ...card.tools].map((skill) => `<span data-skill=${skill}>${skill}</span>`).join("")}  
+                ${[card.role, card.level, ...card.languages, ...card.tools].map((skill) => `<span data-skill="${skill}">${skill}</span>`).join("")}  
             </div>
         </div>`;
     })
@@ -60,18 +61,16 @@ function renderJobList(data, parentElement) {
 selectRole(mainContent);
 
 function selectRole(parentElement) {
-  let tagsArray = [];
-
   parentElement.addEventListener("click", (e) => {
     let span = e.target.tagName === "SPAN";
     if (span) {
       let clickedSkill = e.target.dataset.skill;
 
       // if find duplicate tag don't show
-      let duplicateTag = tagsArray.some((tag) => tag === clickedSkill);
+      let duplicateTag = activeFilter.some((tag) => tag === clickedSkill);
 
       if (duplicateTag) return;
-      else tagsArray.push(clickedSkill); //else push
+      else activeFilter.push(clickedSkill); //else push
 
       const tag = document.createElement("span"); //create a wrapper
       const text = document.createElement("p"); //Text clickedSkill
@@ -91,3 +90,15 @@ function selectRole(parentElement) {
     }
   });
 }
+
+filterTab.addEventListener("click", (e) => {
+  //if no remove btn return
+  if (!e.target.classList.contains("remove-btn")) return;
+
+  let tag = e.target.closest(".skilled-tag");
+  let skill = tag.querySelector("p").innerText;
+
+  activeFilter = activeFilter.filter((s) => s === skill);
+
+  tag.remove();
+});
