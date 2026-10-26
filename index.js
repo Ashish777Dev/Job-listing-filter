@@ -1,6 +1,9 @@
 const mainContent = document.querySelector(".main"); //parent container
 const filterTab = document.querySelector(".filter-tab");
+const clearFilterButton = document.getElementById("clear-filter");
+
 let activeFilter = [];
+
 async function loadData() {
   try {
     const res = await fetch("./data.json");
@@ -97,11 +100,13 @@ filterTab.addEventListener("click", (e) => {
   if (!e.target.classList.contains("remove-btn")) return;
 
   let tag = e.target.closest(".skilled-tag");
-  let skill = tag.querySelector("p").innerText;
+  let skill = tag.querySelector("p").innerText; //get tag innerText
 
   activeFilter = activeFilter.filter((s) => s !== skill);
 
   tag.remove();
+
+  //update job filter
   jobFilter();
 });
 
@@ -118,3 +123,10 @@ function jobFilter() {
     card.classList.toggle("hidden", !match);
   });
 }
+
+clearFilterButton.addEventListener("click", (e) => {
+  activeFilter = [];
+  filterTab.querySelectorAll(".skilled-tag").forEach((tag) => tag.remove());
+
+  jobFilter();
+});
