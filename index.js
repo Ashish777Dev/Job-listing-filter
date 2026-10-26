@@ -62,7 +62,7 @@ selectRole(mainContent);
 
 function selectRole(parentElement) {
   parentElement.addEventListener("click", (e) => {
-    let span = e.target.tagName === "SPAN";
+    let span = e.target.dataset.skill;
     if (span) {
       let clickedSkill = e.target.dataset.skill;
 
@@ -87,6 +87,7 @@ function selectRole(parentElement) {
 
       //append to main container(filter-tab div)
       filterTab.appendChild(tag);
+      jobFilter();
     }
   });
 }
@@ -98,7 +99,22 @@ filterTab.addEventListener("click", (e) => {
   let tag = e.target.closest(".skilled-tag");
   let skill = tag.querySelector("p").innerText;
 
-  activeFilter = activeFilter.filter((s) => s === skill);
+  activeFilter = activeFilter.filter((s) => s !== skill);
 
   tag.remove();
+  jobFilter();
 });
+
+function jobFilter() {
+  // get All the cards
+  document.querySelectorAll(".card").forEach((card) => {
+    //get the data attributes from skilled tag
+    const cardSkill = [...card.querySelectorAll("[data-skill]")].map(
+      (el) => el.dataset.skill,
+    );
+
+    const match = activeFilter.every((s) => cardSkill.includes(s));
+
+    card.classList.toggle("hidden", !match);
+  });
+}
