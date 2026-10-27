@@ -12,11 +12,15 @@ async function loadData() {
 
     //inject data and parentElement in renderJobList
     renderJobList(data, mainContent);
+    toggleFilterTab();
   } catch (error) {
     throw new Error(`Failed to fetch data ERROR: ${error}`);
   }
 }
 loadData();
+
+const toggleFilterTab = () =>
+  (filterTab.style.display = activeFilter.length > 0 ? "flex" : "none");
 
 function renderJobList(data, parentElement) {
   // list card markup
@@ -90,6 +94,7 @@ function selectRole(parentElement) {
 
       //append to main container(filter-tab div)
       filterTab.appendChild(tag);
+      toggleFilterTab();
       jobFilter();
     }
   });
@@ -104,8 +109,15 @@ filterTab.addEventListener("click", (e) => {
 
   activeFilter = activeFilter.filter((s) => s !== skill);
 
+  if (activeFilter.length > 0) {
+    filterTab.style.display = "block";
+  } else {
+    filterTab.style.display = "none";
+  }
+
   tag.remove();
 
+  toggleFilterTab();
   //update job filter
   jobFilter();
 });
@@ -127,6 +139,6 @@ function jobFilter() {
 clearFilterButton.addEventListener("click", (e) => {
   activeFilter = [];
   filterTab.querySelectorAll(".skilled-tag").forEach((tag) => tag.remove());
-
+  toggleFilterTab();
   jobFilter();
 });
